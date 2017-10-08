@@ -19,6 +19,7 @@ fake storm for study and learn  (totally rewrite with java)
 *    1、redis不仅可以作为分布式锁，用于 nimbus 选择 leader；
 *    2、redis还可以用作消息队列，这样原生storm的localStore功能可以减轻，有很多内容可以直接存储在redis里面(例如：配置、jar包等等)；
 *    3、redis使用和部署也比较简单一些；
+*    4、当然，从高可用的角度，redis比zookeeper可能差一些；不过在日志处理等比较简单的应用场景，redis基本可能满足需求；
 
 *    目前版本中，nimbus 没实现 leader 选举功能；
 *    目前版本中，nimbus 的资源调度只是非常简单的一个例子；
