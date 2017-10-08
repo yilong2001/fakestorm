@@ -1,5 +1,9 @@
 # fakestorm
 fake storm for study and learn  (totally rewrite with java)
+
+# fakestorm
+为深入研究storm，使用 java 完全重写的一个 fake storm
+
 ###License
 * Apache License 2.0 
 
