@@ -13,7 +13,7 @@ fake storm for study and learn  (totally rewrite with java)
 ###差异和特性
 *    使用 redis 代替zookeeper，主要考虑的是：
 *    1、redis不仅可以作为分布式锁，用于 nimbus 选择 leader；
-*    2、redis还可以用作消息队列，这样原生storm的localStore，可以存储在redis；
+*    2、redis还可以用作消息队列，这样原生storm的localStore功能可以减轻，有很多内容可以直接存储在redis里面(例如：配置、jar包等等)；
 *    3、redis使用和部署也比较简单一些；
 
 *    目前版本中，nimbus 没实现 leader 选举功能；
