@@ -17,8 +17,13 @@ fake storm for study and learn  (totally rewrite with java)
 *    3、redis使用和部署也比较简单一些；
 
 *    目前版本中，nimbus 没实现 leader 选举功能；
+*    目前版本中，nimbus 的资源调度只是非常简单的一个例子；
 
 *    worker之间的通信，使用了 Nifty（https://github.com/facebook/nifty)，是 thrift 和 netty 简单完美的一个集成；
-*    基于disruptor的良好性能，继续使用 disruptor 作为消息队列；
+*    基于disruptor的良好性能，继续使用 disruptor 作为 worker 内部的消息队列；
 
+*    如果用于研究学习，可以在一个节点启动nimbus、supervisor进程，supervisor 会根据配置 ports，启动相应的worker；
 
+###讨论&交流
+*    mail: yilong2001@126.com
+*    WX: yilong2001
