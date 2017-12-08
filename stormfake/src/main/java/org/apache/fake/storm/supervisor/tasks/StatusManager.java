@@ -117,11 +117,14 @@ public class StatusManager implements Runnable, AutoCloseable {
 
                 //topo assignments is no update
                 if (!updated) {
-                    LOG.warn(" ---------  StatusManager , there is no updated topo assignment ---------- ");
+                    LOG.warn(" ---------  StatusManager , no updated topo assignment ---------- ");
                     continue;
                 }
 
-                curTopoAssignmentVers.set(topoAssignmentVer);
+                if (!curTopoAssignmentVers.compareAndSet(cur, topoAssignmentVer)) {
+                    LOG.warn(" ---------  StatusManager , multi thread update confilct ---------- ");
+                    continue;
+                }
 
                 //TODO: get updated detail, which host:port is updated(add/update/delete)
                 Map<String, WorkerAssignmentInfo> topoAssignments = new HashMap<>();
@@ -173,7 +176,7 @@ public class StatusManager implements Runnable, AutoCloseable {
             wc.close();
         }
 
-        isActive.set(false);
+        isActive.compareAndSet(true, false);
     }
 
 }

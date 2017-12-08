@@ -89,10 +89,10 @@ public class WorkerTupleOutputRunnable implements Runnable {
     }
 
     public void setAssignmentInfo(WorkerAssignmentInfo info) {
-        assignmentInfoAtomic.set(info);
+        assignmentInfoAtomic.compareAndSet(assignmentInfoAtomic.get(), info);
     }
 
     public void active(boolean act) {
-        isActive.set(act);
+        isActive.compareAndSet(isActive.get(), act);
     }
 }

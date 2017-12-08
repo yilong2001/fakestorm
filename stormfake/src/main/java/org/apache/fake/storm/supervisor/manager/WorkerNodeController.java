@@ -112,7 +112,7 @@ public class WorkerNodeController extends Thread implements AutoCloseable {
 
     public void setWorkerAssignmentInfo(WorkerAssignmentInfo info) {
         LOG.info("--------------- " + iSupervisor.getSupervisorId() + " update assignment info ");
-        workerAssignmentInfo.set(info);
+        workerAssignmentInfo.compareAndSet(workerAssignmentInfo.get(), info);
     }
 
     private WorkerStateMachine processEmptyState(WorkerStateMachine stateMachine, WorkerAssignmentInfo newAssignment) {
@@ -376,7 +376,9 @@ public class WorkerNodeController extends Thread implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        active.set(false);
+        if (!active.compareAndSet(true,false)) {
+            return;
+        }
 
         try {
             nimbusThriftClient.close();

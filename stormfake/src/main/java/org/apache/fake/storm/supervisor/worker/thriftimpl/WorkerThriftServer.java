@@ -74,7 +74,7 @@ public class WorkerThriftServer implements Worker.Iface {
 
         List<String> ids = currentSessions.get();
         ids.add(id);
-        currentSessions.set(ids);
+        currentSessions.compareAndSet(currentSessions.get(), ids);
 
         return id;
     }
@@ -102,9 +102,9 @@ public class WorkerThriftServer implements Worker.Iface {
 
         WorkerAssignmentInfo curInfo = assignmentInfoAtomic.get();
         if (curInfo == null) {
-            assignmentInfoAtomic.set(info);
+            assignmentInfoAtomic.compareAndSet(curInfo, info);
         } else if (curInfo.getVersion() < info.getVersion()) {
-            assignmentInfoAtomic.set(info);
+            assignmentInfoAtomic.compareAndSet(curInfo, info);
         } else {
             LOG.warn(" old version assignment ... ");
             return true;
@@ -114,7 +114,7 @@ public class WorkerThriftServer implements Worker.Iface {
         StormTopology topology = topologyGetter.get();
 
         StreamGraphRoot root = TopologyEngine.processTopology(topology);
-        streamGraphRootAtomic.set(root);
+        streamGraphRootAtomic.compareAndSet(streamGraphRootAtomic.get(), root);
 
         TopologyEngine topologyEngine = new TopologyEngine(info, root);
 

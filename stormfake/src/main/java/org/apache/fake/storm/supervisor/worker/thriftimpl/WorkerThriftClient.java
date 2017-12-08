@@ -89,8 +89,7 @@ public class WorkerThriftClient implements AutoCloseable {
             AuthorizationException, FileOperationException, TException, Exception {
         String sessionId = workerThriftServerSessionId.get();
         if (sessionId == null) {
-            sessionId = this.workerClient.getConnectionId();
-            workerThriftServerSessionId.set(sessionId);
+            workerThriftServerSessionId.compareAndSet(sessionId, this.workerClient.getConnectionId());
         }
 
         this.workerClient.setAssignmentPath(sessionId, stormId, topoId);
@@ -100,19 +99,17 @@ public class WorkerThriftClient implements AutoCloseable {
             AuthorizationException, FileOperationException, TException, IOException {
         String sessionId = workerThriftServerSessionId.get();
         if (sessionId == null) {
-            sessionId = this.workerClient.getConnectionId();
-            workerThriftServerSessionId.set(sessionId);
+            workerThriftServerSessionId.compareAndSet(sessionId, this.workerClient.getConnectionId());
         }
 
-        return this.workerClient.ping(sessionId);
+        return this.workerClient.ping(workerThriftServerSessionId.get());
     }
 
     public boolean sendMessage(int taskId, List<Object> tuple, String messageId) throws
             AuthorizationException, FileOperationException, TException, IOException {
         String sessionId = workerThriftServerSessionId.get();
         if (sessionId == null) {
-            sessionId = this.workerClient.getConnectionId();
-            workerThriftServerSessionId.set(sessionId);
+            workerThriftServerSessionId.compareAndSet(sessionId, this.workerClient.getConnectionId());
         }
 
         if (tuple == null || tuple.size() == 0) {
@@ -132,6 +129,6 @@ public class WorkerThriftClient implements AutoCloseable {
             throw new FileOperationException(" WorkerThriftClient_sendMessage, but collection_serialize_failed ......");
         }
 
-        return this.workerClient.sendMessage(sessionId, str, taskId, messageId);
+        return this.workerClient.sendMessage(workerThriftServerSessionId.get(), str, taskId, messageId);
     }
 }

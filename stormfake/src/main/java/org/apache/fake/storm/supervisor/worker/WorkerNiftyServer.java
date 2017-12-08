@@ -214,7 +214,10 @@ public class WorkerNiftyServer implements IWorkerServer {
 
     @Override
     public void setTopologyEngine(TopologyEngine topologyEngine) {
-        topologyEngineAtomic.set(topologyEngine);
+        if (!topologyEngineAtomic.compareAndSet(topologyEngineAtomic.get(), topologyEngine)) {
+            LOG.warn("update confilct");
+            return;
+        }
 
         workerTupleOutputRunnable.setAssignmentInfo(topologyEngine.getAssignmentInfo());
         workerTupleOutputRunnable.active(true);
